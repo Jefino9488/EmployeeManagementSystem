@@ -11,6 +11,26 @@ router.post('/signin', (req, res) => {
         return res.status(401).json({ error: 'Invalid credentials.' });
     });
 });
+router.get('/', (req, res) => {
+    db.query('SELECT id, name, employeeId, email, department, role FROM employees', (err, results) => {
+        if (err) return res.status(500).json({ error: 'Database error.', details: err });
+        return res.status(200).json(results);
+    });
+});
 
+router.post('/add', (req, res) => {
+    const { name, employeeId, email, phone, department, dateOfJoining, role, password } = req.body;
+
+    db.query('SELECT * FROM employees WHERE employeeId = ? OR email = ?', [employeeId, email], (err, results) => {
+        if (err) return res.status(500).json({ error: err });
+        if (results.length > 0) return res.status(400).json({ error: 'Employee ID or Email already exists.' });
+
+        const query = 'INSERT INTO employees (name, employeeId, email, phone, department, dateOfJoining, role, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+        db.query(query, [name, employeeId, email, phone, department, dateOfJoining, role, password], (err, results) => {
+            if (err) return res.status(500).json({ error: err });
+            return res.status(201).json({ message: 'Employee added successfully!' });
+        });
+    });
+});
 
 export default router;
