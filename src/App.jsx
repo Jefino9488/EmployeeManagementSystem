@@ -6,9 +6,16 @@ import { Separator } from "@/components/ui/separator";
 
 const App = () => {
     const [isSignedIn, setIsSignedIn] = useState(false);
+    const [userRole, setUserRole] = useState(null);
+
+    const handleSignIn = (role) => {
+        setUserRole(role);
+        setIsSignedIn(true);
+    };
 
     const handleLogout = () => {
         setIsSignedIn(false);
+        setUserRole(null);
     };
 
     return (
@@ -20,10 +27,10 @@ const App = () => {
                 <Separator className="my-4" />
                 <CardContent>
                     {isSignedIn ? (
-                        <AdminPanel onLogout={handleLogout} />
+                        <AdminPanel onLogout={handleLogout} userRole={userRole} />
                     ) : (
                         <div className="flex justify-center">
-                            <SignIn onSignIn={() => setIsSignedIn(true)} />
+                            <SignIn onSignIn={handleSignIn} />
                         </div>
                     )}
                 </CardContent>

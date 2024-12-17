@@ -4,10 +4,10 @@ import AddEmployeeForm from './AddEmployeeForm';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { PlusCircle, MinusCircle } from 'lucide-react';
+import { PlusCircle, MinusCircle, Trash2, RefreshCcw } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
-const AdminPanel = ({ onLogout }) => {
+const AdminPanel = ({ onLogout, userRole }) => {
     const [isAdding, setIsAdding] = useState(false);
     const [employees, setEmployees] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -31,6 +31,19 @@ const AdminPanel = ({ onLogout }) => {
         }
     };
 
+    const deleteEmployee = async (employeeId) => {
+        if (!window.confirm('Are you sure you want to delete this employee?')) return;
+
+        try {
+            await axios.delete(`http://localhost:5000/api/employees/delete/${employeeId}`);
+            setEmployees(employees.filter((employee) => employee.employeeId !== employeeId));
+            alert('Employee deleted successfully!');
+        } catch (error) {
+            console.error('Error deleting employee:', error);
+            alert('Failed to delete the employee. Please try again.');
+        }
+    };
+
     return (
         <Card className="w-full max-w-4xl mx-auto">
             <CardHeader>
@@ -50,7 +63,6 @@ const AdminPanel = ({ onLogout }) => {
                                 </>
                             )}
                         </Button>
-                        {/* Logout Button */}
                         <Button onClick={onLogout} variant="destructive">
                             Logout
                         </Button>
@@ -65,7 +77,13 @@ const AdminPanel = ({ onLogout }) => {
                     </div>
                 )}
                 <div className="mt-6">
-                    <h3 className="text-lg font-semibold mb-4">Employee List</h3>
+                    <div className="flex justify-between items-center mb-4">
+                        <h3 className="text-lg font-semibold">Employee List</h3>
+                        <Button onClick={fetchEmployees} variant="outline" size="sm">
+                            <RefreshCcw className="mr-2 h-4 w-4" />
+                            Refresh
+                        </Button>
+                    </div>
                     {isLoading ? (
                         <p>Loading employees...</p>
                     ) : error ? (
@@ -79,16 +97,31 @@ const AdminPanel = ({ onLogout }) => {
                                     <TableHead>Email</TableHead>
                                     <TableHead>Department</TableHead>
                                     <TableHead>Role</TableHead>
+                                    {['admin', 'owner'].includes(userRole) && (
+                                    <TableHead>Actions</TableHead>
+                                        )}
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {employees.map((employee) => (
-                                    <TableRow key={employee.id}>
+                                    <TableRow key={employee.employeeId}>
                                         <TableCell>{employee.name}</TableCell>
                                         <TableCell>{employee.employeeId}</TableCell>
                                         <TableCell>{employee.email}</TableCell>
                                         <TableCell>{employee.department}</TableCell>
                                         <TableCell>{employee.role}</TableCell>
+                                        <TableCell>
+                                            {['admin', 'owner'].includes(userRole) && (
+                                                <Button
+                                                    onClick={() => deleteEmployee(employee.employeeId)}
+                                                    variant="destructive"
+                                                    size="sm"
+                                                >
+                                                    <Trash2 className="mr-2 h-4 w-4" />
+                                                    Delete
+                                                </Button>
+                                            )}
+                                        </TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

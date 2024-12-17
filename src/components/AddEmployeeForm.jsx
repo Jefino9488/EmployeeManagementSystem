@@ -185,7 +185,17 @@ const AddEmployeeForm = () => {
                                     <FormItem>
                                         <FormLabel>Role</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Software Engineer" {...field} onChange={handleChange} />
+                                            <Select onValueChange={(value) => handleChange({ target: { name: 'role', value } })} defaultValue={field.value}>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Select a role" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="admin">Admin</SelectItem>
+                                                    <SelectItem value="owner">Owner</SelectItem>
+                                                    <SelectItem value="employee">Employee</SelectItem>
+                                                    <SelectItem value="manager">Manager</SelectItem>
+                                                </SelectContent>
+                                            </Select>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>

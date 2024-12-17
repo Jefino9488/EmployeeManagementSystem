@@ -5,19 +5,20 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
 const SignIn = ({ onSignIn }) => {
-    const [employeeId, setEmployeeId] = useState('')
-    const [password, setPassword] = useState('')
-    const [error, setError] = useState('')
+    const [employeeId, setEmployeeId] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
 
     const handleSignIn = async () => {
         try {
-            const res = await axios.post('http://localhost:5000/api/employees/signin', { employeeId, password })
-            alert(res.data.message)
-            onSignIn()
+            const res = await axios.post('http://localhost:5000/api/employees/signin', { employeeId, password });
+            alert(res.data.message);
+            console.log(res.data)
+            onSignIn(res.data.role);
         } catch (err) {
-            setError(err.response.data.error)
+            setError(err.response?.data?.error || 'Sign-in failed.');
         }
-    }
+    };
 
     return (
         <Card className="w-[350px]">
@@ -49,8 +50,7 @@ const SignIn = ({ onSignIn }) => {
                 </form>
             </CardContent>
         </Card>
-    )
-}
+    );
+};
 
-export default SignIn
-
+export default SignIn;
