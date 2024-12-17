@@ -33,4 +33,18 @@ router.post('/add', (req, res) => {
     });
 });
 
+router.delete('/delete/:employeeId', (req, res) => {
+    const { employeeId } = req.params;
+
+    db.query('SELECT * FROM employees WHERE employeeId = ?', [employeeId], (err, results) => {
+        if (err) return res.status(500).json({ error: err });
+        if (results.length === 0) return res.status(404).json({ error: 'Employee not found.' });
+
+        db.query('DELETE FROM employees WHERE employeeId = ?', [employeeId], (err, results) => {
+            if (err) return res.status(500).json({ error: err });
+            return res.status(200).json({ message: 'Employee deleted successfully!' });
+        });
+    });
+});
+
 export default router;

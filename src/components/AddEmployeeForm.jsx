@@ -39,12 +39,14 @@ const AddEmployeeForm = () => {
     const form = useForm({
         resolver: yupResolver(schema),
         defaultValues: formData,
+        mode: 'onChange', // This enables real-time validation
     })
 
     const handleChange = (e) => {
         const { name, value } = e.target
         setFormData(prev => ({ ...prev, [name]: value }))
         form.setValue(name, value)
+        form.trigger(name) // This triggers validation for the changed field
     }
 
     const handleSubmit = async () => {
@@ -90,7 +92,7 @@ const AddEmployeeForm = () => {
                                     <FormItem>
                                         <FormLabel>Name</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="John Doe" {...field} onChange={handleChange} />
+                                            <Input placeholder="Jefino" {...field} onChange={handleChange} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -103,7 +105,7 @@ const AddEmployeeForm = () => {
                                     <FormItem>
                                         <FormLabel>Employee ID</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="EMP001" {...field} onChange={handleChange} />
+                                            <Input placeholder="Jefino9488" {...field} onChange={handleChange} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -116,7 +118,7 @@ const AddEmployeeForm = () => {
                                     <FormItem>
                                         <FormLabel>Email</FormLabel>
                                         <FormControl>
-                                            <Input type="email" placeholder="john@example.com" {...field} onChange={handleChange} />
+                                            <Input type="email" placeholder="example@example.com" {...field} onChange={handleChange} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -165,7 +167,12 @@ const AddEmployeeForm = () => {
                                     <FormItem>
                                         <FormLabel>Date of Joining</FormLabel>
                                         <FormControl>
-                                            <Input type="date" {...field} onChange={handleChange} />
+                                            <Input
+                                                type="date"
+                                                {...field}
+                                                onChange={handleChange}
+                                                max={new Date().toISOString().split('T')[0]} // This restricts future dates
+                                            />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -194,6 +201,10 @@ const AddEmployeeForm = () => {
                                             <Input type="password" {...field} onChange={handleChange} />
                                         </FormControl>
                                         <FormMessage />
+                                        <p className="text-xs text-gray-500 mt-1">
+                                            Password must be at least 8 characters long, include an uppercase letter,
+                                            a lowercase letter, a number, and a special character.
+                                        </p>
                                     </FormItem>
                                 )}
                             />
