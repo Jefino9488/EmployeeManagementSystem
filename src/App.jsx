@@ -1,11 +1,15 @@
-import { useState } from 'react'
-import SignIn from './components/SignIn'
-import AdminPanel from './components/AdminPanel'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
+import { useState } from 'react';
+import SignIn from './components/SignIn';
+import AdminPanel from './components/AdminPanel';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 const App = () => {
-    const [isSignedIn, setIsSignedIn] = useState(false)
+    const [isSignedIn, setIsSignedIn] = useState(false);
+
+    const handleLogout = () => {
+        setIsSignedIn(false);
+    };
 
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
@@ -16,7 +20,7 @@ const App = () => {
                 <Separator className="my-4" />
                 <CardContent>
                     {isSignedIn ? (
-                        <AdminPanel />
+                        <AdminPanel onLogout={handleLogout} />
                     ) : (
                         <div className="flex justify-center">
                             <SignIn onSignIn={() => setIsSignedIn(true)} />
@@ -25,7 +29,7 @@ const App = () => {
                 </CardContent>
             </Card>
         </div>
-    )
-}
+    );
+};
 
-export default App
+export default App;

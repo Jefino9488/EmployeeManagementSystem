@@ -7,7 +7,7 @@ import { Separator } from '@/components/ui/separator';
 import { PlusCircle, MinusCircle } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
-const AdminPanel = () => {
+const AdminPanel = ({ onLogout }) => {
     const [isAdding, setIsAdding] = useState(false);
     const [employees, setEmployees] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -36,19 +36,25 @@ const AdminPanel = () => {
             <CardHeader>
                 <div className="flex justify-between items-center">
                     <CardTitle className="text-2xl font-bold">Admin Panel</CardTitle>
-                    <Button onClick={() => setIsAdding(!isAdding)} variant="outline">
-                        {isAdding ? (
-                            <>
-                                <MinusCircle className="mr-2 h-4 w-4" />
-                                Hide
-                            </>
-                        ) : (
-                            <>
-                                <PlusCircle className="mr-2 h-4 w-4" />
-                                Add Employee
-                            </>
-                        )}
-                    </Button>
+                    <div className="flex space-x-4">
+                        <Button onClick={() => setIsAdding(!isAdding)} variant="outline">
+                            {isAdding ? (
+                                <>
+                                    <MinusCircle className="mr-2 h-4 w-4" />
+                                    Hide
+                                </>
+                            ) : (
+                                <>
+                                    <PlusCircle className="mr-2 h-4 w-4" />
+                                    Add Employee
+                                </>
+                            )}
+                        </Button>
+                        {/* Logout Button */}
+                        <Button onClick={onLogout} variant="destructive">
+                            Logout
+                        </Button>
+                    </div>
                 </div>
             </CardHeader>
             <Separator />
