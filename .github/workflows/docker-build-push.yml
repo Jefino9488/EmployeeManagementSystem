@@ -1,0 +1,35 @@
+name: Build and Push
+on:
+  push:
+    paths:
+      - 'src/**'
+      - 'backend/**'
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    name: Build and Push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Log in to GitHub Docker Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.GITHUB_ACTOR }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and Push Backend Image
+        run: |
+          docker build -t ghcr.io/${{ github.repository_owner }}/employeemanagementsystem-backend:latest ./backend
+          docker push ghcr.io/${{ github.repository_owner }}/employeemanagementsystem-backend:latest
+
+      - name: Build and Push Frontend Image
+        run: |
+          docker build -t ghcr.io/${{ github.repository_owner }}/employeemanagementsystem-frontend:latest .
+          docker push ghcr.io/${{ github.repository_owner }}/employeemanagementsystem-frontend:latest
